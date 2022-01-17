@@ -1,0 +1,25 @@
+#!/usr/bin/bash
+
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+# autostart scripts
+${HOME}/.config/polybar/launch.py &
+
+# bspwm
+bspc monitor -d I II III IV V VI
+
+bspc config border_width         2
+bspc config window_gap          10
+bspc config normal_bordar_color \#1E2529
+bspc config focused_border_color \#6D8692
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+# external rules
+bspc config external_rules_command ~/.config/bspwm/external_rules.sh
+
+# rules
+bspc config -m Virtual-1 top_padding 35
+
