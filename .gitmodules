@@ -1,0 +1,3 @@
+[submodule ".config/Code/User"]
+	path = .config/Code/User
+	url = https://github.com/senabi/vscode.user.git
