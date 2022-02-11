@@ -16,8 +16,9 @@ def find_mode(id, modes):
         if id == mode.id:
             return f"{mode.width}x{mode.height}"
 
+
 def get_display_info():
-    d = display.Display(':0')
+    d = display.Display(":0")
     screen_count = d.screen_count()
     default_screen = d.get_default_screen()
     result = []
@@ -34,40 +35,52 @@ def get_display_info():
         modes = set()
         for mode in params.modes:
             modes.add(find_mode(mode, res.modes))
-        result.append({
-            'name': params.name,
-            'resultion': f"{crtc.width}x{crtc.height}",
-            'available_resolution': list(modes)
-            })
+        result.append(
+            {
+                "name": params.name,
+                "resultion": f"{crtc.width}x{crtc.height}",
+                "available_resolution": list(modes),
+            }
+        )
 
     return result
+
 
 display_info = get_display_info()
 os.system("killall -q polybar")
 time.sleep(2)
 
 config = f"{os.environ['HOME']}/.config/polybar/config.ini"
-polybar_proc = lambda name,env: subprocess.Popen(["polybar", name, "-c", config], env=env, close_fds=True)
+polybar_proc = lambda name, env: subprocess.Popen(
+    ["polybar", name, "-c", config], env=env, close_fds=True
+)
 
 match len(display_info):
     case 1:
-        os.environ['MONITOR'] = display_info[0]['name']
+        os.environ["MONITOR"] = display_info[0]["name"]
         env = os.environ.copy()
-        procs = ["workspace", "keyboard", "time", "audio", "stats_single_mon", "tray_single_mon", "background"]
+        procs = [
+            "workspace",
+            "keyboard",
+            "time",
+            "audio",
+            "stats_single_mon",
+            "tray_single_mon",
+            "background",
+        ]
         for name in procs[:-1]:
-            polybar_proc(name,env)
+            polybar_proc(name, env)
         time.sleep(2)
-        polybar_proc(procs[-1],env)
+        polybar_proc(procs[-1], env)
     case 2:
-        os.environ['MONITOR'] = display_info[0]['name']
+        os.environ["MONITOR"] = display_info[0]["name"]
         env = os.envirion.copy()
         first_procs = ["workspace", "keyboard", "time", "audio"]
         sec_procs = ["workspace@v2", "stats", "tray", "background"]
         for name in first_procs:
             polybar_proc(name, env)
-        env['MONITOR'] = display_info[1]['name']
+        env["MONITOR"] = display_info[1]["name"]
         for name in sec_procs[:-1]:
-            polybar_proc(name,env)
+            polybar_proc(name, env)
         time.sleep(2)
         polybar_proc(sec_procs[-1], env)
-
