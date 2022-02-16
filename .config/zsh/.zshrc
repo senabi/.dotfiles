@@ -46,8 +46,8 @@ bindkey -v '^?' backward-delete-char
 bindkey -s ^f "tmux-sessionizer\n"
 bindkey -s ^t "tmux\n"
 
-#plugins
 
+#plugins
 source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
