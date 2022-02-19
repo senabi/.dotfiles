@@ -54,5 +54,9 @@ source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 #aliases
 [ -f "$HOME/.config/zsh/aliases.sh" ] && source "$HOME/.config/zsh/aliases.sh"
 
+# source "$NVM_DIR/nvm.sh"
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"  # This loads nvm
+
 #prompt
 eval "$(starship init zsh)"
