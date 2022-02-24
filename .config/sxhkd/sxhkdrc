@@ -25,10 +25,10 @@ super + y
 	bspc node newest.marked.local -n newest.!automatic.local
 # swap the current node and the biggest window
 super + Return
-	bspc node -s biggest.window
+	bspc node -s biggest.local.window
 # set the window state
-super + {t,shift + t,shift + space,f}
-	bspc node -t {tiled,pseudo_tiled,'~floating','~fullscreen'}
+super + {t,shift + space,f}
+	bspc node -t {tiled,'~floating','~fullscreen'}
 # set the node flags
 super + ctrl + {m,x,s,z}
 	bspc node -g {marked,locked,sticky,private}
@@ -85,7 +85,7 @@ super + {Left,Down,Up,Right}
 ## shortcuts
 # volume, sound
 XF86Audio{Mute,RaiseVolume,LowerVolume}
-    pamixer {--toggle-mute,-i 2,-d 3}
+    pactl {set-sink-mute @DEFAULT_SINK@ toggle, set-sink-volume @DEFAULT_SINK@ +4%, set-sink-volume @DEFAULT_SINK@ -4%}
 # player
 XF86Audio{Play,Next,Prev}
     playerctl {play-pause,next,previous}
@@ -93,8 +93,14 @@ XF86Audio{Play,Next,Prev}
 super + shift + Print
     screenshot flameshot select
 # web browser
-alt + w 
+alt + w
     firefox
 # top
 alt + t
     kitty -e btop
+
+super + d
+  ${HOME}/.config/rofi/bin/launcher_misc
+
+super + q
+  ${HOME}/.config/rofi/bin/android_powermenu
