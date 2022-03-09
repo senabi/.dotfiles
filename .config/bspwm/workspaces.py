@@ -14,6 +14,6 @@ if __name__ == '__main__':
     monitors = Outputs().get_list()
     if len(monitors) == 0:
         exit(1)
-    spawn_workspaces(monitors[0]["name"], 5)
+    spawn_workspaces(monitors[0]["name"], 6)
     if len(monitors) >= 2:
         spawn_workspaces(monitors[1]["name"], 3)
