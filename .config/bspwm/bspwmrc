@@ -3,7 +3,8 @@
 pgrep -x sxhkd > /dev/null || sxhkd &
 
 # autostart scripts
-${HOME}/.config/polybar/launch.py &
+[[ ${DESKTOP_SESSION} = "/usr/share/xsessions/bspwm" ]] && ${HOME}/.config/polybar/launch.py &
+[ -z ${DESKTOP_SESSION+x} ] && ${HOME}/.config/polybar/launch.py &
 
 # bspwm
 ${HOME}/.config/bspwm/workspaces.py
