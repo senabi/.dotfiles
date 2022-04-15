@@ -104,3 +104,6 @@ super + d
 
 super + q
   ${HOME}/.config/rofi/bin/android_powermenu
+
+super + e
+  pcmanfm

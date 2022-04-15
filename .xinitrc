@@ -6,6 +6,7 @@ export VISUAL=nvim
 export TERMINAL=kitty
 export ZDOTDIR=$HOME/.config/zsh
 export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/go/bin:$PATH
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
@@ -15,6 +16,8 @@ export CXX=clang++
 export QT_STYLE_OVERRIDE=kvantum
 export DENO_INSTALL=/home/toa/.deno
 export PATH=$DENO_INSTALL/bin:$PATH
+export XDG_SESSION_TYPE=x11
+export GDK_BACKEND=x11
 
 # vm
 # xrandr -s 1600x900
@@ -28,12 +31,15 @@ xinput --set-prop 9 'libinput Accel Profile Enabled' 0, 1
 xinput --set-prop 10 'libinput Accel Speed' -1
 xsetroot -cursor_name left_ptr
 
-dunst &
-picom &
+# /usr/libexec/polkit-gnome-authentication-agent-1 &
+# dunst &
+# picom &
 nitrogen --restore &
 nm-applet &
-pasystray &
+# pasystray &
 
 #paths
 source ${HOME}/.cargo/env
-exec bspwm
+# exec dbus-run-session bspwm
+# exec bspwm
+exec dbus-launch bspwm
