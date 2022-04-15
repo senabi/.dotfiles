@@ -56,8 +56,8 @@
     history_length = 20
 
     ### Misc/Advanced ###
-    # dmenu = /usr/bin/urxvt -e fzf:
-    browser = sh -c "${BROWSER}"
+    dmenu = /usr/bin/urxvt -e fzf:
+    browser = /usr/bin/firefox
     always_run_script = false
     title = Dunst
     class = Dunst

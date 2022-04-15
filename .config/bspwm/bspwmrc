@@ -16,7 +16,7 @@ MONITOR=HDMI-A-4 polybar aio-w -c ~/.config/polybar/config.ini &
 # bspwm
 ${HOME}/.config/bspwm/workspaces.py
 
-bspc config border_width         2
+bspc config border_width         0
 bspc config window_gap          10
 bspc config normal_bordar_color \#1E2529
 bspc config focused_border_color \#6D8692

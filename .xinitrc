@@ -33,7 +33,7 @@ xsetroot -cursor_name left_ptr
 
 # /usr/libexec/polkit-gnome-authentication-agent-1 &
 # dunst &
-# picom &
+picom --animations --animation-window-mass 0.5 --animation-for-open-window zoom --animation-stiffness 350 &
 nitrogen --restore &
 nm-applet &
 # pasystray &
