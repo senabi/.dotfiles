@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# PATH & system bin
+echo $PATH | grep -q "/sbin:/usr/sbin" || export PATH="/sbin:/usr/sbin:$PATH"
+
+# PATH & local binaries
+if [ -d "$HOME/bin" ] ; then
+  echo $PATH | grep -q "$HOME/bin" || export PATH="$HOME/bin:$PATH"
+fi
+if [ -d "$HOME/.local/bin" ] ; then
+  echo $PATH | grep -q "$HOME/.local/bin" || export PATH="$HOME/.local/bin:$PATH"
+fi
+
+# PATH & Go
+if [ -d "$HOME/go/bin" ] ; then
+  echo $PATH | grep -q "$HOME/go/bin" || export PATH="$HOME/go/bin:$PATH"
+fi
+if [ -d "/usr/local/go/bin" ] ; then
+  echo $PATH | grep -q "/usr/local/go/bin" || export PATH="/usr/local/go/bin:$PATH"
+  echo $GOPATH | grep -q "$HOME/go" || export GOPATH="$HOME/go"
+  echo $GOROOT | grep -q "/usr/local/go" || export GOROOT="/usr/local/go"
+fi
+
+# PATH & Rust
+if [ -d "$HOME/.cargo/bin" ] ; then
+  echo $PATH | grep -q "$HOME/.cargo/bin" || export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
+# No append
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
+export ZDOTDIR=$HOME/.config/zsh
+export EDITOR=nvim
+export VISUAL=nvim
+export CC=clang
+export CXX=clang++
+# export XDG_SESSION_TYPE=x11
+# export GDK_BACKEND=x11
+export _JAVA_AWT_WM_NONREPARENTING=1
+export TERMINAL=kitty
+export NVM_DIR="$HOME/.config/nvm"
+# export QT_STYLE_OVERRIDE=kvantum TODO
+# export DENO_INSTALL=/home/toa/.deno TODO
+# export PATH=$DENO_INSTALL/bin:$PATH TODO
+
