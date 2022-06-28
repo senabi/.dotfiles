@@ -1,0 +1,11 @@
+@theme "solarized"
+*{
+  border-width: 1px;
+  border-radius: 10px;
+  font:         "SF Pro Display 13";
+}
+
+entry {
+  content: " ";
+  blink:true;
+}
