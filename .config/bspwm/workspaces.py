@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!env python
 
 from outputs import Outputs
 import subprocess

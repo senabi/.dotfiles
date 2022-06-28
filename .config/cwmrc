@@ -1,0 +1,116 @@
+# Theme Settings
+borderwidth 0
+color activeborder "#073642"
+color inactiveborder "#002B36"
+color groupborder "002B36"
+color ungroupborder "002B36"
+color menubg "#002B36"
+color menufg "#93A1A1"
+color font "#93A1A1"
+color selfont "#002B36"
+
+# Set Font
+fontname "SF Pro Display:size=13"
+
+# Turn on sticky-group mode
+sticky yes
+
+# Keybindings
+# (firstly unbind the defaults - I am not quite a fan)
+# C = Control, M = ALT, S = Shift, 4 = Mod4 (Windows Key)
+unbind-key CMS-q
+unbind-key CM-f
+unbind-key CMS-r
+unbind-key C-slash
+unbind-key M-h
+unbind-key M-j
+unbind-key M-k
+unbind-key M-l
+unbind-key all
+
+ignore stalonetray
+ignore lemonbar
+autogroup 0 stalonetray
+autogroup 0 lemonbar
+gap 0 0 0 0
+
+moveamount 20
+bind-key 4-Return "kitty"
+bind-key 4-d      "rofi -modi drun -show drun -show-icons"
+bind-key 4-r      "rofi -modi run -show run -show-icons"
+
+bind-key 4M-n window-menu-label
+bind-key C4-slash menu-cmd
+bind-key 4-slash menu-window
+bind-key 4-BackSpace window-hide
+bind-key 4S-q     quit
+bind-key 4S-r     restart
+bind-key 4S-f     window-fullscreen
+bind-key 4S-m     window-maximize
+bind-key 4-h      group-rcycle
+bind-key 4-l      group-cycle
+bind-key 4-q      window-close
+bind-key 4-j      window-cycle
+bind-key 4-k      window-rcycle
+bind-key 4-1      group-only-1
+bind-key 4-2      group-only-2
+bind-key 4-3      group-only-3
+bind-key 4-4      group-only-4
+bind-key 4S-1     window-movetogroup-1
+bind-key 4S-2     window-movetogroup-2
+bind-key 4S-3     window-movetogroup-3
+bind-key 4S-4     window-movetogroup-4
+bind-key 4S-h     window-snap-left
+bind-key 4S-j     window-snap-down
+bind-key 4S-k     window-snap-up
+bind-key 4S-l     window-snap-right
+bind-key 4M-h     window-move-left
+bind-key 4M-j     window-move-down
+bind-key 4M-k     window-move-up
+bind-key 4M-l     window-move-right
+bind-key C4M-h    window-move-left-big
+bind-key C4M-j    window-move-down-big
+bind-key C4M-k    window-move-up-big
+bind-key C4M-l    window-move-right-big
+bind-key 4-u      window-htile
+bind-key 4-i      window-vtile
+bind-key M-Tab    window-cycle
+bind-key MS-Tab   window-rcycle
+bind-key 4-Tab    group-last
+bind-key CM-s     window-stick
+
+# Application Keybindings
+#bind-key 4-w      chrome
+#bind-key 4-g      gimp
+#bind-key 4-s      scrot
+#bind-key 4-m      maxvol
+bind-key 4-f      "xterm -e fff"
+bind-key 4-p      "kitty -e cmus"
+bind-key 4-e      "xdg-open ."
+bind-key 4-t      "kitty -e btop"
+bind-key 4-b      "launch-bar"
+bind-key 4-n      "now"
+bind-key XF86AudioRaiseVolume "changeVolume up"
+bind-key XF86AudioLowerVolume "changeVolume down"
+bind-key XF86AudioMute        "changeVolume mute-toggle"
+bind-key XF86AudioPlay         "playerctl play-pause"
+bind-key XF86AudioNext         "playerctl next"
+bind-key XF86AudioPrev         "playerctl previous"
+bind-key 4-Print               "screenshot flameshot select"
+# super + shift + Print
+#     screenshot flameshot select
+
+# My Custom Script Keybindings
+#bind-key 4-e			emoji-selector
+#bind-key 4-t			time_date
+
+# Mouse Keybindings
+bind-mouse 4-1    window-move
+bind-mouse 4-3    window-resize
+
+# Applications Menu
+# command chomium chrome
+command Gimp gimp
+command Logseq logseq
+command Excalidraw "xdg-open 'https://excalidraw.com'"
+

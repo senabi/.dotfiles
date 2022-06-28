@@ -1,3 +1,73 @@
 add_newline = false
 [line_break]
 disabled = true
+# Disable the package module, hiding it from the prompt completely
+[package]
+disabled = true
+
+[aws]
+disabled = true
+
+[azure]
+disabled = true
+
+[battery]
+disabled = true
+
+[buf]
+disabled = true
+
+[cmake]
+disabled = true
+
+[cobol]
+disabled = true
+
+[container]
+disabled = true
+
+[crystal]
+disabled = true
+
+[dart]
+disabled = true
+
+[deno]
+disabled = true
+
+[dotnet]
+disabled = true
+
+[elixir]
+disabled = true
+
+[elm]
+disabled = true
+
+[env_var]
+disabled = true
+
+[erlang]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[golang]
+disabled = true
+
+[haskell]
+disabled = true
+
+[python]
+disabled = true
+
+[rust]
+disabled = true
+
+[shell]
+disabled = true
+
+[nodejs]
+disabled = true
+

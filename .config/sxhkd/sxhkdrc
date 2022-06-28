@@ -1,6 +1,6 @@
 # term
 super + shift + Return
-    $TERMINAL
+    kitty
 # menu
 super + @space
     dmenu_run

@@ -5,10 +5,14 @@ pgrep -x sxhkd > /dev/null || sxhkd &
 # autostart scripts
 [[ ${DESKTOP_SESSION} = "/usr/share/xsessions/bspwm" ]] && ${HOME}/.config/polybar/launch.py &
 # [ -z ${DESKTOP_SESSION+x} ] && ${HOME}/.config/polybar/launch.py &
-echo $PATH | grep -q "~/go/bin" && export PATH=$HOME/go/bin:$PATH
+# echo $PATH | grep -q "~/go/bin" && export PATH=$HOME/go/bin:$PATH
+# echo $PATH | grep -q "$HOME/.local/bin" &&
+export PATH=$HOME/.local/bin:$PATH
 
-killall -q polybar
-sleep 2
+# killall -q polybar
+# sleep 2
+bspc monitor DisplayPort-0 -d 1 2 3 4 5 6
+bspc monitor HDMI-A-4 -d 7 8 9
 MONITOR=DisplayPort-1 polybar aio -c ~/.config/polybar/config.ini &
 MONITOR=HDMI-A-4 polybar aio-w -c ~/.config/polybar/config.ini &
 

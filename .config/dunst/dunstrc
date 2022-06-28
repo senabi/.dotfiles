@@ -8,7 +8,7 @@
     indicate_hidden = yes
     shrink = true
     transparency = 1
-    notification_height = 80
+    #notification_height = 80
     separator_height = 10
     padding = 7
     horizontal_padding = 7
@@ -39,8 +39,8 @@
     format = "<b>%a</b>\n%s\n%b"
     alignment = left
     show_age_threshold = 60
-    word_wrap = true
-    ellipsize = middle
+    #word_wrap = true
+    #ellipsize = middle
     ignore_newline = false
     stack_duplicates = true
     hide_duplicate_count = true
@@ -49,33 +49,34 @@
     ### Icons ###
     icon_position = left
     max_icon_size = 120
-    icon_path = /home/toa/.local/share/icons/Tela-circle-dark/32/status/:/home/toa/.local/share/icons/Tela-circle-dark/32/devices/:/home/toa/.local/share/icons/Tela-circle-dark/scalable/apps
+    icon_path = /home/baddra/.local/share/icons/Tela-circle-dark/32/status/:/home/baddra/.local/share/icons/Tela-circle-dark/32/devices/:/home/baddra/.local/share/icons/Tela-circle-dark/scalable/apps
 
     ### History ###
     sticky_history = yes
     history_length = 20
 
     ### Misc/Advanced ###
-    dmenu = /usr/bin/urxvt -e fzf:
+    dmenu = rofi -dmenu
     browser = /usr/bin/firefox
     always_run_script = false
     title = Dunst
     class = Dunst
     startup_notification = true
     force_xinerama = false
+    mouse_left_click = do_action
 
 [experimental]
     per_monitor_dpi = false
 
 [dunst_icon]
     appname = dunst
-    new_icon = /home/toa/.local/share/icons/Tela-circle-dark/24/actions/bell.svg
+    new_icon = /home/baddra/.local/share/icons/Tela-circle-dark/24/actions/bell.svg
 
-#[shortcuts]
-#    close = ctrl+space
-#    close_all = ctrl+shift+space
-#    context = ctrl+shift+period
-#    history = ctrl+grave
+[shortcuts]
+    close = ctrl+space
+    close_all = ctrl+shift+space
+    context = ctrl+shift+period
+    #history = ctrl+esc
 
 [urgency_low]
     background = "#202020"
