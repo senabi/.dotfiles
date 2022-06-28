@@ -1,0 +1,71 @@
+#!/bin/bash
+
+ENABLE=$1
+GRUB_FILE=/etc/default/grub
+# GRUB_FILE=$HOME/grub
+GRUB_FILE_BAK=/tmp/grub.bak
+GRUB_TMP=/tmp/grub.tmp
+VFIO_FILE_PATH="/etc/modprobe.d/vfio.conf"
+BLACKLIST_FILE_PATH="/etc/modprobe.d/blacklist.conf"
+XORG_INTEL_CONFIG='
+Section "Device"\nIdentifier "Intel Graphics"\nDriver "intel"\nOption "AccelMethod"  "sna"\nOption "TearFree"     "true"\nOption "DRI"          "3"\nEndSection'
+XORG_INTEL_CONFIG_FILE_PATH="/etc/X11/xorg.conf.d/20-intel.conf"
+
+XORG_AMD_CONFIG='Section "Device"\nIdentifier "AMD"\nDriver "amdgpu"\nOption "TearFree" "true"\nEndSection'
+XORG_AMD_CONFIG_FILE_PATH="/etc/X11/xorg.conf.d/20-amdgpu.conf"
+
+GRUB_INTEL_IOMMU_ENABLE='GRUB_CMDLINE_LINUX_DEFAULT="intel_iommu=on vfio-pci.ids=1002:67df,1002:aaf0"'
+GRUB_INTEL_IOMMU_DISABLE='GRUB_CMDLINE_LINUX_DEFAULT=""'
+
+MODPROBE_VFIO='options vfio-pci ids=1002:67df,1002:aaf0\nsoftdep amdgpu pre: vfio-pci'
+
+MODPROBE_BLACKLIST='blacklist radeon\nblacklist amdgpu'
+
+# cp $GRUB_FILE $HOME/.local/share/baks/grub
+cp $GRUB_FILE $GRUB_FILE_BAK
+
+if [[ $ENABLE = "enable" ]]; then
+  echo "enable" && \
+  # IOMMU CONF
+  echo $GRUB_INTEL_IOMMU_ENABLE && \
+  # Edit grub file configuration to a tem file
+  sed -e "s/$GRUB_INTEL_IOMMU_DISABLE/$GRUB_INTEL_IOMMU_ENABLE/" $GRUB_FILE > $GRUB_TMP && \
+  # GRUB FILE BACKUP
+  cp $GRUB_FILE $GRUB_FILE_BAK && \
+  # UPDATE GRUB FILE
+  sudo cp $GRUB_TMP $GRUB_FILE && \
+  sudo grub-mkconfig -o /boot/grub/grub.cfg && \
+  # CREATE VFIO FILE
+  echo -e $MODPROBE_VFIO | sudo tee $VFIO_FILE_PATH && \
+  # CREATE BLACKLIST FILE
+  echo -e $MODPROBE_BLACKLIST | sudo tee $BLACKLIST_FILE_PATH && \
+  # REMOVE XORG CONF FOR AMD
+  sudo rm -rf $XORG_AMD_CONFIG_FILE_PATH && \
+  # CREATE INTEL XORG CONF
+  echo -e $XORG_INTEL_CONFIG | sudo tee $XORG_INTEL_CONFIG_FILE_PATH && \
+  # UPDATE INITRAMFS
+  sudo update-initramfs -u
+elif [[ $ENABLE = "disable" ]]; then
+  echo "disable" && \
+  # IOMMU CONF
+  echo $GRUB_INTEL_IOMMU_DISABLE && \
+  # Edit grub file configuration to a tem file
+  sed -e "s/$GRUB_INTEL_IOMMU_ENABLE/$GRUB_INTEL_IOMMU_DISABLE/" $GRUB_FILE > $GRUB_TMP && \
+  # GRUB FILE BACKUP
+  cp $GRUB_FILE $GRUB_FILE_BAK && \
+  # UPDATE GRUB FILe
+  sudo cp $GRUB_TMP $GRUB_FILE && \
+  sudo grub-mkconfig -o /boot/grub/grub.cfg && \
+  # REMOVE VFIO FILE
+  sudo rm -rf $VFIO_FILE_PATH && \
+  # REMOVE BLACKLIST FILE
+  sudo rm -rf $BLACKLIST_FILE_PATH && \
+  # REMOVE XORG CONF FOR INTEL
+  sudo rm -rf $XORG_INTEL_CONFIG_FILE_PATH && \
+  # CREATE AMD XORG CONF
+  echo -e $XORG_AMD_CONFIG | sudo tee $XORG_AMD_CONFIG_FILE_PATH && \
+  sudo update-initramfs -u
+else
+  echo "error"
+  exit -1
+fi
