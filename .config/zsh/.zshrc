@@ -9,7 +9,6 @@ zmodload zsh/complist
 _comp_options+=(globdots)
 typeset -a ealiases
 ealiases=()
-
 function abbr() {
     alias $1
     ealiases+=(${1%%\=*})
@@ -55,16 +54,7 @@ source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 [ -f "$HOME/.config/zsh/aliases.sh" ] && source "$HOME/.config/zsh/aliases.sh"
 
 # source "$NVM_DIR/nvm.sh"
-export HADOOP_HOME=/usr/local/hadoop
-export HADOOP_INSTALL=$HADOOP_HOME
-export HADOOP_MAPRED_HOME=$HADOOP_HOME
-export HADOOP_COMMON_HOME=$HADOOP_HOME
-export HADOOP_HDFS_HOME=$HADOOP_HOME
-export YARN_HOME=$HADOOP_HOME
-export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
-export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
-export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
 
 if [[ ${XDG_SESSION_TYPE} = "x11" ]]; then
   eval "$(starship init zsh)"
@@ -75,9 +65,9 @@ if [[ ${XDG_SESSION_TYPE} = "x11" ]]; then
       eval "$__conda_setup"
   else
       if [ -f "/home/baddra/.local/share/anaconda3/etc/profile.d/conda.sh" ]; then
-          . "/home/baddra/.local/share/anaconda3/etc/profile.d/conda.sh"
+# . "/home/baddra/.local/share/anaconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
       else
-          export PATH="/home/baddra/.local/share/anaconda3/bin:$PATH"
+# export PATH="/home/baddra/.local/share/anaconda3/bin:$PATH"  # commented out by conda initialize
       fi
   fi
   unset __conda_setup
