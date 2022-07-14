@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ENABLE=$1
+GPU=$2
 GRUB_FILE=/etc/default/grub
 #GRUB_FILE=/tmp/grub
 GRUB_FILE_BAK=/home/baddra/Documents/bak/grub.bak
@@ -16,61 +17,123 @@ XORG_AMD_CONFIG='Section "Device"\nIdentifier "AMD"\nDriver "amdgpu"\nOption "Te
 XORG_AMD_CONFIG_FILE_PATH="/etc/X11/xorg.conf.d/20-amdgpu.conf"
 
 #GRUB_INTEL_IOMMU_ENABLE='GRUB_CMDLINE_LINUX_DEFAULT="intel_iommu=on vfio-pci.ids=1002:67df,1002:aaf0"'
-GRUB_INTEL_IOMMU_ENABLE='GRUB_CMDLINE_LINUX="rhgb quiet intel_iommu=on vfio-pci.ids=1002:67df,1002:aaf0"'
+GRUB_INTEL_IOMMU_ENABLE='GRUB_CMDLINE_LINUX="rhgb quiet intel_iommu=on vfio-pci.ids=1002:67df,1002:aaf0 rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nvidia-drm.modeset=1 initcall_blacklist=simpledrm_platform_driver_init"'
+GRUB_INTEL_IOMMU_ENABLE_NVIDIA='GRUB_CMDLINE_LINUX="rd.driver.pre=vfio-pci rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nvidia-drm.modeset=1 rhgb quiet"'
 #GRUB_INTEL_IOMMU_DISABLE='GRUB_CMDLINE_LINUX_DEFAULT=""'
-GRUB_INTEL_IOMMU_DISABLE='GRUB_CMDLINE_LINUX="rhgb quiet"'
+GRUB_INTEL_IOMMU_DISABLE='GRUB_CMDLINE_LINUX="rhgb quiet rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nvidia-drm.modeset=1 initcall_blacklist=simpledrm_platform_driver_init"'
+GRUB_INTEL_IOMMU_DISABLE_NVIDIA='GRUB_CMDLINE_LINUX="rhgb quiet rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nvidia-drm.modeset=1 initcall_blacklist=simpledrm_platform_driver_init"'
 
 MODPROBE_VFIO='options vfio-pci ids=1002:67df,1002:aaf0\nsoftdep amdgpu pre: vfio-pci'
+MODPROBE_VFIO_NVIDIA='options vfio-pci ids=10de:1c82,10de:0fb9\nsoftdep nvidia pre: vfio-pci'
 
-#MODPROBE_BLACKLIST='blacklist radeon\nblacklist amdgpu'
+
+#MODPROBE_BLACKLIST_AMD='blacklist radeon\nblacklist amdgpu'
+MODPROBE_BLACKLIST_NVIDIA='blacklist nouveau'
+BLACKLIST_FILE_PATH=/etc/modprobe.d/blacklist.conf
 cp $GRUB_FILE $GRUB_FILE_BAK
 
-if [[ $ENABLE = "enable" ]]; then
-  echo "enable" && \
-  # IOMMU CONF
-  echo $GRUB_INTEL_IOMMU_ENABLE && \
-  # Edit grub file configuration to a tem file
-  sed -e "s/$GRUB_INTEL_IOMMU_DISABLE/$GRUB_INTEL_IOMMU_ENABLE/" $GRUB_FILE > $GRUB_TMP && \
-  # GRUB FILE BACKUP
-  cp $GRUB_FILE $GRUB_FILE_BAK && \
-  # UPDATE GRUB FILE
-  sudo cp $GRUB_TMP $GRUB_FILE && \
-  # sudo grub-mkconfig -o /boot/grub/grub.cfg && \ debian
-  sudo grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg && \
-  # CREATE VFIO FILE
-  echo -e $MODPROBE_VFIO | sudo tee $VFIO_FILE_PATH && \
-  # CREATE BLACKLIST FILE
-  # echo -e $MODPROBE_BLACKLIST | sudo tee $BLACKLIST_FILE_PATH && \
-  # REMOVE XORG CONF FOR AMD
-  sudo rm -rf $XORG_AMD_CONFIG_FILE_PATH && \
-  # CREATE INTEL XORG CONF
-  echo -e $XORG_INTEL_CONFIG | sudo tee $XORG_INTEL_CONFIG_FILE_PATH && \
-  # UPDATE INITRAMFS
-  # sudo update-initramfs -u debian
-  sudo dracut --regenerate-all --force
-elif [[ $ENABLE = "disable" ]]; then
-  echo "disable" && \
-  # IOMMU CONF
-  echo $GRUB_INTEL_IOMMU_DISABLE && \
-  # Edit grub file configuration to a tem file
-  sed -e "s/$GRUB_INTEL_IOMMU_ENABLE/$GRUB_INTEL_IOMMU_DISABLE/" $GRUB_FILE > $GRUB_TMP && \
-  # GRUB FILE BACKUP
-  cp $GRUB_FILE $GRUB_FILE_BAK && \
-  # UPDATE GRUB FILe
-  sudo cp $GRUB_TMP $GRUB_FILE && \
-  # sudo grub-mkconfig -o /boot/grub/grub.cfg && \ debian
-  sudo grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg && \
-  # REMOVE VFIO FILE
-  sudo rm -rf $VFIO_FILE_PATH && \
-  # REMOVE BLACKLIST FILE
-  # sudo rm -rf $BLACKLIST_FILE_PATH && \
-  # REMOVE XORG CONF FOR INTEL
-  sudo rm -rf $XORG_INTEL_CONFIG_FILE_PATH && \
-  # CREATE AMD XORG CONF
-  echo -e $XORG_AMD_CONFIG | sudo tee $XORG_AMD_CONFIG_FILE_PATH && \
-  # sudo update-initramfs -u debian
-  sudo dracut --regenerate-all --force
+if [[ $GPU = "amd" ]]; then
+  echo "For AMD GPUs"
+  if [[ $ENABLE = "enable" ]]; then
+    echo "enable" && \
+    # IOMMU CONF
+    echo $GRUB_INTEL_IOMMU_ENABLE && \
+    # Edit grub file configuration to a tem file
+    sed -e "s/$GRUB_INTEL_IOMMU_DISABLE/$GRUB_INTEL_IOMMU_ENABLE/" $GRUB_FILE > $GRUB_TMP && \
+    # GRUB FILE BACKUP
+    cp $GRUB_FILE $GRUB_FILE_BAK && \
+    # UPDATE GRUB FILE
+    sudo cp $GRUB_TMP $GRUB_FILE && \
+    # sudo grub-mkconfig -o /boot/grub/grub.cfg && \ debian
+    sudo grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg && \
+    # CREATE VFIO FILE
+    echo -e $MODPROBE_VFIO | sudo tee $VFIO_FILE_PATH && \
+    # CREATE BLACKLIST FILE
+    # echo -e $MODPROBE_BLACKLIST | sudo tee $BLACKLIST_FILE_PATH && \
+    # REMOVE XORG CONF FOR AMD
+    sudo rm -rf $XORG_AMD_CONFIG_FILE_PATH && \
+    # CREATE INTEL XORG CONF
+    echo -e $XORG_INTEL_CONFIG | sudo tee $XORG_INTEL_CONFIG_FILE_PATH && \
+    # UPDATE INITRAMFS
+    # sudo update-initramfs -u debian
+    sudo dracut --regenerate-all --force
+  elif [[ $ENABLE = "disable" ]]; then
+    echo "disable" && \
+    # IOMMU CONF
+    echo $GRUB_INTEL_IOMMU_DISABLE && \
+    # Edit grub file configuration to a tem file
+    sed -e "s/$GRUB_INTEL_IOMMU_ENABLE/$GRUB_INTEL_IOMMU_DISABLE/" $GRUB_FILE > $GRUB_TMP && \
+    # GRUB FILE BACKUP
+    cp $GRUB_FILE $GRUB_FILE_BAK && \
+    # UPDATE GRUB FILe
+    sudo cp $GRUB_TMP $GRUB_FILE && \
+    # sudo grub-mkconfig -o /boot/grub/grub.cfg && \ debian
+    sudo grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg && \
+    # REMOVE VFIO FILE
+    sudo rm -rf $VFIO_FILE_PATH && \
+    # REMOVE BLACKLIST FILE
+    # sudo rm -rf $BLACKLIST_FILE_PATH && \
+    # REMOVE XORG CONF FOR INTEL
+    sudo rm -rf $XORG_INTEL_CONFIG_FILE_PATH && \
+    # CREATE AMD XORG CONF
+    echo -e $XORG_AMD_CONFIG | sudo tee $XORG_AMD_CONFIG_FILE_PATH && \
+    # sudo update-initramfs -u debian
+    sudo dracut --regenerate-all --force
+  else
+    echo "error"
+    exit -1
+  fi
+elif [[ $GPU = "nvidia" ]]; then
+  echo "For NVIDIA GPUs"
+  if [[ $ENABLE = "enable" ]]; then
+    echo "enable" && \
+    # IOMMU CONF
+    echo $GRUB_INTEL_IOMMU_ENABLE_NVIDIA && \
+    # Edit grub file configuration to a tem file
+    sed -e "s/$GRUB_INTEL_IOMMU_DISABLE_NVIDIA/$GRUB_INTEL_IOMMU_ENABLE_NVIDIA/" $GRUB_FILE > $GRUB_TMP && \
+    # GRUB FILE BACKUP
+    cp $GRUB_FILE $GRUB_FILE_BAK && \
+    # UPDATE GRUB FILE
+    sudo cp $GRUB_TMP $GRUB_FILE && \
+    # sudo grub-mkconfig -o /boot/grub/grub.cfg && \ debian
+    sudo grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg && \
+    # CREATE VFIO FILE
+    echo -e $MODPROBE_VFIO_NVIDIA | sudo tee $VFIO_FILE_PATH && \
+    # CREATE BLACKLIST FILE
+    echo -e $MODPROBE_BLACKLIST_NVIDIA | sudo tee $BLACKLIST_FILE_PATH && \
+    # CREATE AMD XORG CONF
+    echo -e $XORG_AMD_CONFIG | sudo tee $XORG_AMD_CONFIG_FILE_PATH && \
+    # UPDATE INITRAMFS
+    # sudo update-initramfs -u debian
+    sudo dracut --regenerate-all --force
+  elif [[ $ENABLE = "disable" ]]; then
+    echo "disable" && \
+    # IOMMU CONF
+    echo $GRUB_INTEL_IOMMU_DISABLE_NVIDIA && \
+    # Edit grub file configuration to a tem file
+    sed -e "s/$GRUB_INTEL_IOMMU_ENABLE_NVIDIA/$GRUB_INTEL_IOMMU_DISABLE_NVIDIA/" $GRUB_FILE > $GRUB_TMP && \
+    # GRUB FILE BACKUP
+    cp $GRUB_FILE $GRUB_FILE_BAK && \
+    # UPDATE GRUB FILe
+    sudo cp $GRUB_TMP $GRUB_FILE && \
+    # sudo grub-mkconfig -o /boot/grub/grub.cfg && \ debian
+    sudo grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg && \
+    # REMOVE VFIO FILE
+    sudo rm -rf $VFIO_FILE_PATH && \
+    # REMOVE BLACKLIST FILE
+    sudo rm -rf $BLACKLIST_FILE_PATH && \
+    # REMOVE XORG CONF FOR INTEL
+    sudo rm -rf $XORG_INTEL_CONFIG_FILE_PATH && \
+    # CREATE AMD XORG CONF
+    echo -e $XORG_AMD_CONFIG | sudo tee $XORG_AMD_CONFIG_FILE_PATH && \
+    # sudo update-initramfs -u debian
+    sudo dracut --regenerate-all --force
+  else
+    echo "error"
+    exit -1
+  fi
 else
   echo "error"
   exit -1
 fi
+
